@@ -24,6 +24,9 @@ export default async function handler(req,res){
 
         if (!user) {
           user = await User.create({ phone, otp, otpExpiresAt });
+        }
+        else if(user.verified){
+          return res.status(400).json({ success: true,message:'you are already registered' });
         } else {
           user.otp = otp;
           user.otpExpiresAt = otpExpiresAt;

@@ -6,7 +6,8 @@ export default function OtpVerification({ phone, onVerified }) {
 
   const handleVerifyOtp = async () => {
     try {
-      await axios.post('/api/register/verify-otp', { phone, otp });
+      const isLogin = false;
+      await axios.post('/api/register/verify-otp', { phone, otp ,isLogin});
       onVerified();
     } catch (err) {
       console.error('OTP Verification Failed:', err.response.data.message);

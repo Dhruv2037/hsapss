@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 //import Cookies from 'js-cookie';
 
 export default function LoginWithPassword() {
+    const router = useRouter();
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post('/api/login/with-password', { phone, password });
+        console.log(phone , password);
+      const response = await axios.post('/api/login/with-password', { phone, password });
       // Redirect to dashboard or home page
+      if (response.status === 200) {
+        // Redirect to dashboard using router
+        router.push('/Dashboard');
+      }
       // After login success
 //Cookies.set('session_token', response.data.token, { expires: 1 }); // Expires in 1 day
 

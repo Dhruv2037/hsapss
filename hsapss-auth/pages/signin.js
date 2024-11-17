@@ -1,9 +1,11 @@
 // pages/signin.js
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import { useRouter } from 'next/router';
 import OtpForm from '../components/LoginWithOtp';
 import PasswordForm from '../components/LoginWithPassword';
 
 export default function SignIn() {
+    const router = useRouter();
   const [authMethod, setAuthMethod] = useState(null); // 'otp' or 'password'
  // const [isOtpVerified, setIsOtpVerified] = useState(false);
 
@@ -17,13 +19,15 @@ export default function SignIn() {
       router.push('/signin');
     } else {
       // Simulate token verification (e.g., make an API request to verify the token)
-      setLoading(false);
+      //setLoading(false);
+      (window.location.href = '/Dashboard');
     }
-  }, [router]);
-  
-  const handleOtpVerified = () => {
-    setIsOtpVerified(true);
-  };
+  }, []);
+//   const handleOtpVerified = () => {
+//     setIsOtpVerified(true);
+//     (window.location.href = '/Dashboard')
+
+//   };
 
   return (
     <div className="signin-container">
@@ -38,7 +42,7 @@ export default function SignIn() {
       ) : (
         // Show corresponding form based on the selected authentication method
         authMethod === 'otp' ? (
-          <OtpForm onOtpVerified={handleOtpVerified} />
+          <OtpForm />
         ) : (
           <PasswordForm />
         )
