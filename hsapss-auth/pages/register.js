@@ -13,7 +13,10 @@ export default function Register() {
   };
 
   const onVerified = () => setStep(3);
-  const onPasswordSet = () => (window.location.href = '/sign-in');
+  const onPasswordSet = () =>{
+    (window.location.href = '/Dashboard')
+    
+};
 
   return (
     <>
