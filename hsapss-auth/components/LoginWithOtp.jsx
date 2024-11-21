@@ -20,7 +20,7 @@ export default function LoginWithOtp() {
 
   const handleSendOtp = async() =>{
     try {
-        await axios.post('/api/register/send-otp', { phone });
+        await axios.post('/api/register/send-otp', { phone,isLogin });
         setOtpSent(true);
       } catch (err) {
         console.error('Error sending OTP:', err.response.data.message);

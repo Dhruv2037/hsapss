@@ -3,14 +3,15 @@ import axios from 'axios';
 
 export default function PhoneNumberInput({ onOtpSent }) {
   const [phone, setPhone] = useState('');
+  const isLogin = false; // check for login or register
 
   const handleSendOtp = async () => {
     try {
-      const res = await axios.post('/api/register/send-otp', { phone });
+      const res = await axios.post('/api/register/send-otp', { phone,isLogin });
       if(res.status === 200 )
         onOtpSent(phone);
       else
-        alert(res.data.message);
+        console.log(res.data.message);
     } catch (err) {
       console.error('Error sending OTP:', err.response.data.message);
     }

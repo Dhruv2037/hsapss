@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
+import { useRouter } from 'next/router';
 import PhoneNumberInput from '../components/PhoneNumber';
 import OtpVerification from '../components/OtpVerification';
 import SetPassword from '../components/SetPassword';
 
 export default function Register() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState('');
+
+  useEffect(()=>{
+
+    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+    console.log("Token:", token);
+    if (!token) {
+      // If no token, redirect to sign-in page
+      router.push('/signin');
+    } else {
+      // Simulate token verification (e.g., make an API request to verify the token)
+      router.push('/Dashboard');
+    }
+  }, [router]);
 
   const onOtpSent = (phone) => {
     setPhone(phone);
