@@ -7,6 +7,7 @@ export default function PhoneNumberInput({ onOtpSent }) {
 
   const handleSendOtp = async () => {
     try {
+      
       const res = await axios.post('/api/register/send-otp', { phone,isLogin });
       if(res.status === 200 )
         onOtpSent(phone);
