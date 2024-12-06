@@ -25,7 +25,7 @@ const Dashboard = () => {
       if (response.status === 200) {
         console.log('Logout successful');
         // Redirect to sign-in page after logout
-        router.push('/signin');
+        router.push('/');
       }
     } catch (error) {
       console.error('Error logging out:', error);

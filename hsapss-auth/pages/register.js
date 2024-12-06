@@ -8,6 +8,8 @@ export default function Register() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState('');
+  const [isExistingUser,setIsExistingUser] = useState(false);
+
 
   // useEffect(()=>{
 
@@ -22,8 +24,14 @@ export default function Register() {
   //   }
   // }, [router]);
 
-  const onOtpSent = (phone) => {
+  const onOtpSent = (phone,isExistingUser) => {
     setPhone(phone);
+    setIsExistingUser(isExistingUser);
+    const data ={phoneNo:phone,isExistingUser}
+    //console.log(data);
+    if(isExistingUser){ 
+      router.push({pathname:'/signin',query:data});
+    }
     setStep(2);
   };
 

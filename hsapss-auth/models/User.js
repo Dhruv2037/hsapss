@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
     verified: { type: Boolean, default: false },
     otp: { type: String },
     otpExpiresAt: { type: Date },
+    processStatus: {
+        type: String,
+        enum: ["OTP_VERIFICATION", "SET_PASSWORD", "COMPLETE_PROFILE", "COMPLETED"],
+        default: "OTP_VERIFICATION",
+      }, 
 });
 
 

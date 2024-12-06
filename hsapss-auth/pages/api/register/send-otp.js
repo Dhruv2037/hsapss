@@ -14,7 +14,7 @@ export default async function handler(req,res){
         return res.status(405).json({error:'Method Not Allowed'});
 
     const phone = req.body.phone;
-    const isLogin = req.body.isLogin;
+   // const isLogin = req.body.isLogin;
     console.log(phone);
     if(!phone)
        return res.status(400).json({error:"Phone number is required"});
@@ -26,9 +26,10 @@ export default async function handler(req,res){
         if (!user) {
           user = await User.create({ phone, otp, otpExpiresAt });
         }
-        else if(!isLogin && user.verified){
-          return res.status(400).json({ success: true,message:'you are already registered' });
-        } else {
+        // else if(!isLogin && user.verified){
+        //   return res.status(409).json({ success: true,message:'you are already registered' });
+        //}
+         else {
           user.otp = otp;
           user.otpExpiresAt = otpExpiresAt;
           await user.save();
