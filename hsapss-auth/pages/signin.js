@@ -59,11 +59,13 @@
 // pages/signin.js
 import { useState,useEffect } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import OtpForm from '../components/LoginWithOtp';
 import PasswordForm from '../components/LoginWithPassword';
 
 export default function SignIn() {
     const router = useRouter();
+    const [phone, setPhone] = useState(null);
   const [authMethod, setAuthMethod] = useState(null); // 'otp' or 'password'
  // const [isOtpVerified, setIsOtpVerified] = useState(false);
 
@@ -72,14 +74,29 @@ export default function SignIn() {
     // Check if the token exists in the cookies
     const token = document.cookie.split('; ').find(row => row.startsWith('token='));
     console.log("Token:", token);
-    if (!token) {
-      // If no token, redirect to sign-in page
-      router.push('/signin');
-    } else {
-      // Simulate token verification (e.g., make an API request to verify the token)
-      //setLoading(false);
-      (window.location.href = '/Dashboard');
-    }
+    const fetchPhoneFromCookie = async () => {
+      try {
+        const response = await axios.get('/api/get-phone');
+        setPhone(response.data.phone); // Store phone number in state
+        console.log(response.data.phone);
+        if (!token && !response.data.phone) {
+          // If no token, redirect to sign-in page
+          router.push('/register');
+        } 
+        else if(token) {
+          // Simulate token verification (e.g., make an API request to verify the token)
+          //setLoading(false);
+          (window.location.href = '/Dashboard');
+        }
+       // handleSendOtp();
+      } catch (error) {
+        console.error('Error fetching phone:', error);
+        setMessage('Unable to retrieve phone. Please log in again.');
+      }
+    };
+  
+    fetchPhoneFromCookie();
+    
   }, []);
 //   const handleOtpVerified = () => {
 //     setIsOtpVerified(true);

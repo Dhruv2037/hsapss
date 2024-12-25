@@ -78,7 +78,7 @@ export default function LoginWithOtp() {
     const router = useRouter();
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [isOtpSent,setOtpSent] = useState(false);
+  const [isOtpSent,setOtpSent] = useState(true);
   const isLogin = true;
 
 //   const handleLogin = async () => {
@@ -95,6 +95,8 @@ useEffect(()=>{
     try {
       const response = await axios.get('/api/get-phone');
       setPhone(response.data.phone); // Store phone number in state
+      console.log(response.data.phone);
+     // handleSendOtp();
     } catch (error) {
       console.error('Error fetching phone:', error);
       setMessage('Unable to retrieve phone. Please log in again.');
@@ -103,6 +105,10 @@ useEffect(()=>{
 
   fetchPhoneFromCookie();
 },[]);
+
+useEffect(()=>{
+  handleSendOtp();
+},[phone]);
   const handleSendOtp = async() =>{
     try {
         await axios.post('/api/register/send-otp', { phone,isLogin });
@@ -124,7 +130,7 @@ useEffect(()=>{
   return (
     <div>
       <h2>Login with OTP</h2>
-      { !isOtpSent ? (
+      {/* { !isOtpSent ? (
         <div>
         <input
         type="text"
@@ -133,7 +139,8 @@ useEffect(()=>{
         placeholder="Phone Number"
       />
       <button onClick={handleSendOtp}>Send OTP</button></div>
-    )  : (
+    )  :  */}
+    
         <div>
       <input
         type="text"
@@ -142,8 +149,8 @@ useEffect(()=>{
         placeholder="Enter OTP"
       />
       <button onClick={handleVerifyOtp}>Login</button>
-    </div>)
-}
+    </div>
+
 </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 //import Cookies from 'js-cookie';
@@ -26,15 +26,30 @@ export default function LoginWithPassword() {
     }
   };
 
+    useEffect(()=>{
+      const fetchPhoneFromCookie = async () => {
+        try {
+          const response = await axios.get('/api/get-phone');
+          setPhone(response.data.phone); // Store phone number in state
+          console.log(response.data.phone);
+         // handleSendOtp();
+        } catch (error) {
+          console.error('Error fetching phone:', error);
+          setMessage('Unable to retrieve phone. Please log in again.');
+        }
+      };
+    
+      fetchPhoneFromCookie();
+    })
   return (
     <div>
       <h2>Login with Password</h2>
-      <input
+      {/* <input
         type="text"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
         placeholder="Phone Number"
-      />
+      /> */}
       <input
         type="password"
         value={password}

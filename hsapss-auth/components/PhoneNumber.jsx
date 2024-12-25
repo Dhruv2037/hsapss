@@ -67,24 +67,113 @@
 //   );
 // }
 
-import { useState } from 'react';
-import axios from 'axios';
+// import { useState } from 'react';
+// import axios from 'axios';
+// import UserProcess from '../constants/UserProcess';
+// import Register from '../pages/register';
 
-export default function PhoneNumberInput({onOtpSent}) {
+// export default function PhoneNumberInput({onOtpSent}) {
+//   const [phone, setPhone] = useState('');
+//   const [message, setMessage] = useState('');
+
+//   const handleCheckRegistration = async () => {
+//     try {
+//       const response = await axios.post('/api/register/check-registration', { phone });
+//       const { isExistingUser , processStatus} = response.data;
+
+//       if (isExistingUser) {
+//         setMessage('User exists. Redirecting to sign-in...');
+//         switch(processStatus){
+//           case UserProcess.OTP_VERIFICATION:
+//             await handleSendOtp();
+//             break;
+//           case UserProcess.SET_PASSWORD:
+//             <Register step={3}></Register>
+//             break;
+//           case UserProcess.COMPLETE_PROFILE:
+//             <Register step={4}></Register>
+//             break;
+//         };
+//         window.location.href = '/signin';
+//       } else {
+//         setMessage('User does not exist. Redirecting to registration...');
+//         //window.location.href = '/register';
+//         await handleSendOtp();
+//       }
+//     } catch (error) {
+//       console.error('Error:', error);
+//       setMessage(error.response?.data?.error || 'An error occurred.');
+//     }
+//   };
+
+//   const handleSendOtp = async () => {
+//     try {
+//       console.log("sending otp......");
+//       const res = await axios.post('/api/register/send-otp', { phone });
+//       console.log("res:",res);
+//       if(res.status === 200 )
+//         onOtpSent(phone);
+//       else
+//         console.log(res.data.message);
+//     } catch (err) {
+//       console.error('Error sending OTP:', err.response.data.message);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h1>Login</h1>
+//       <input
+//         type="text"
+//         placeholder="Enter phone number"
+//         value={phone}
+//         onChange={(e) => setPhone(e.target.value)}
+//       />
+//       <button onClick={handleCheckRegistration}>Login</button>
+//       {message && <p>{message}</p>}
+//     </div>
+//   );
+// }
+
+
+import { useState } from 'react';
+//import { useRouter } from 'next/router';
+import axios from 'axios';
+import UserProcess from '../constants/UserProcess';
+import Register from '../pages/register';
+
+export default function PhoneNumberInput({ onOtpSent }) {
+ // const router = useRouter();
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [step, setStep] = useState(1); // State to control the step flow
 
   const handleCheckRegistration = async () => {
     try {
       const response = await axios.post('/api/register/check-registration', { phone });
-      const { isExistingUser } = response.data;
+      const { isExistingUser, processStatus } = response.data;
 
       if (isExistingUser) {
-        setMessage('User exists. Redirecting to sign-in...');
-        window.location.href = '/signin';
+        setMessage('User exists. Redirecting to the appropriate step...');
+        switch (processStatus) {
+          case UserProcess.OTP_VERIFICATION:
+            await handleSendOtp();
+            break;
+          case UserProcess.SET_PASSWORD:
+            setStep(3); // Update step state
+            break;
+          case UserProcess.COMPLETE_PROFILE:
+            setStep(4); // Update step state
+            break;
+            case UserProcess.COMPLETED:
+              //router.push({pathname:'/signin'});
+              setStep(5);
+              break;
+          default:
+            console.error('Unknown process status');
+        }
       } else {
         setMessage('User does not exist. Redirecting to registration...');
-        //window.location.href = '/register';
         await handleSendOtp();
       }
     } catch (error) {
@@ -95,29 +184,37 @@ export default function PhoneNumberInput({onOtpSent}) {
 
   const handleSendOtp = async () => {
     try {
-      console.log("sending otp......");
+      console.log('Sending OTP...');
       const res = await axios.post('/api/register/send-otp', { phone });
-      console.log("res:",res);
-      if(res.status === 200 )
+      if (res.status === 200) {
         onOtpSent(phone);
-      else
+      } else {
         console.log(res.data.message);
+      }
     } catch (err) {
-      console.error('Error sending OTP:', err.response.data.message);
+      console.error('Error sending OTP:', err.response?.data?.message || err.message);
     }
   };
 
+  // Render based on the `step`
   return (
     <div>
-      <h1>Login</h1>
-      <input
-        type="text"
-        placeholder="Enter phone number"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-      />
-      <button onClick={handleCheckRegistration}>Login</button>
-      {message && <p>{message}</p>}
+      {step === 1 && (
+        <div>
+          <h1>Login</h1>
+          <input
+            type="text"
+            placeholder="Enter phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <button onClick={handleCheckRegistration}>Login</button>
+          {message && <p>{message}</p>}
+        </div>
+      )}
+      {step === 3 && <Register stepNo={3} phoneNo ={phone} />}
+      {step === 4 && <Register stepNo={4} phoneNo ={phone}/>}
+      {step === 5 && <Register stepNo={5} phoneNo ={phone}/>}
     </div>
   );
 }

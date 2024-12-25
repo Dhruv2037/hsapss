@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     res.setHeader('Set-Cookie', cookie);
 
     // Return the registration status
-    res.status(200).json({ isExistingUser });
+    res.status(200).json({ isExistingUser,processStatus:user.processStatus });
   } catch (error) {
     console.error('Error checking registration:', error);
     res.status(500).json({ error: 'Internal Server Error' });

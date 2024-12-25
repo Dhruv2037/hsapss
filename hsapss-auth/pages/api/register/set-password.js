@@ -1,5 +1,6 @@
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
+import UserProcess from '../../../constants/UserProcess';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -12,6 +13,7 @@ export default async function handler(req, res) {
   }
 
   user.password = password;
+  user.processStatus = UserProcess.COMPLETE_PROFILE;
   await user.save();
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 

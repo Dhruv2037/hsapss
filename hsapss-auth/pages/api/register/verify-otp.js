@@ -1,5 +1,6 @@
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
+import UserProcess from '../../../constants/UserProcess';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -13,6 +14,7 @@ export default async function handler(req, res) {
   if(isLogin && !user.verified)
     return res.status(400).json({ error: 'you are not registered' });
   user.verified = true;
+  user.processStatus =( user.processStatus == UserProcess.OTP_VERIFICATION ? UserProcess.SET_PASSWORD : user.processStatus);
   user.otp = undefined;
   user.otpExpiresAt = undefined;
   await user.save();
